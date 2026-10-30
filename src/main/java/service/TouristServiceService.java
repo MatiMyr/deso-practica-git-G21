@@ -7,13 +7,23 @@ import exception.ServiceNotFoundException;
 import repository.dao.FlightDao;
 
 import java.util.List;
+import java.util.OptionalDouble;
 
 public class TouristServiceService {
 
   // Ejercicio 2
   public double getAveragePriceByCompany(List<TouristService> services, String company)
       throws ServiceNotFoundException {
-    throw new UnsupportedOperationException("Ejercicio 2: implement getAveragePriceByCompany");
+    OptionalDouble average = services.stream()
+            .filter(s -> s.getCompany() != null && s.getCompany().equalsIgnoreCase(company))
+            .mapToDouble(TouristService::calculatePrice)
+            .average();
+
+    if (average.isEmpty()) {
+      throw new ServiceNotFoundException(company);
+    }
+
+    return average.getAsDouble();
   }
 
   // Ejercicio 4
